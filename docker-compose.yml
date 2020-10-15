@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  node-client:
+    image: node-pulsar
+    build:
+      context: .
+      dockerfile: pulsar-node.dockerfile
+    volumes:
+      - ./node:/var/app
+    depends_on: 
+      - pulsar
+    networks:
+      - pulsar-network
+    stdin_open: true    
+    tty: true  
+    
+  pulsar:
+    image: apachepulsar/pulsar:2.6.1
+    ports:
+      - 8080:8080
+      - 6650:6650
+    networks:
+      - pulsar-network
+    command: ["bin/pulsar","standalone"] 
+
+networks:
+  pulsar-network:
+    driver: bridge
